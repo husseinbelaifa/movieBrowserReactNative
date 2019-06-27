@@ -1,44 +1,84 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React from "react";
+import { View, Text, Icon } from "react-native";
+import {
+  createStackNavigator,
+  createBottomTabNavigator,
+  createAppContainer
+} from "react-navigation";
 
-import React, { Component } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
-import { Provider } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
+import HomeScreen from "./src/screens/HomeScreen";
+import FavoritesScreen from "./src/screens/FavoritesScreen";
+import MovieDetailScreen from "./src/screens/MovieDetailScreen";
 
-export default class App extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
+import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
+
+const homeStack = createStackNavigator(
+  {
+    Home: HomeScreen,
+    MovieDetail: MovieDetailScreen
+  },
+  {
+    initialRouteName: "Home"
   }
-}
+);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF"
+homeStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible
+  };
+};
+
+const favoritesStack = createStackNavigator(
+  {
+    Favorites: FavoritesScreen,
+    MovieDetail: MovieDetailScreen
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
+  {
+    initialRouteName: "Favorites"
+  }
+);
+
+favoritesStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible
+  };
+};
+
+const tabNavigator = createMaterialBottomTabNavigator({
+  Home: {
+    screen: homeStack,
+    navigationOptions: {
+      tabBarLabel: "Home",
+      tabBarIcon: ({ tintColor }) => {
+        <View>
+          <Icon style={[{ color: tintColor }]} size={25} name={"ios-home"} />
+        </View>;
+      }
+    }
   },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5
+  Favorites: {
+    screen: favoritesStack,
+    navigationOptions: {
+      tabBarLabel: "Favorite",
+      tabBarIcon: ({ tintColor }) => {
+        <View>
+          <Icon
+            style={[{ color: tintColor }]}
+            size={25}
+            name={"ios-favorite"}
+          />
+        </View>;
+      }
+    }
   }
 });
+
+export default createAppContainer(tabNavigator);
