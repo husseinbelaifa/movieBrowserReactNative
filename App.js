@@ -14,10 +14,15 @@ import { createMaterialBottomTabNavigator } from "react-navigation-material-bott
 
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import { name as appName } from "./app.json";
 import reducers from "./src/store/reducers";
-const store = createStore(reducers, applyMiddleware(thunk));
+
+import { composeWithDevTools } from "remote-redux-devtools";
+
+const composeEnhancers = composeWithDevTools({ realtime: true, port: 8000 });
+
+const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
 const homeStack = createStackNavigator(
   {
