@@ -12,6 +12,13 @@ import MovieDetailScreen from "./src/screens/MovieDetailScreen";
 
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import { createStore, applyMiddleware } from "redux";
+import { name as appName } from "./app.json";
+import reducers from "./src/store/reducers";
+const store = createStore(reducers, applyMiddleware(thunk));
+
 const homeStack = createStackNavigator(
   {
     Home: HomeScreen,
@@ -80,5 +87,11 @@ const tabNavigator = createMaterialBottomTabNavigator({
     }
   }
 });
+
+const appNavigator = (
+  <Provider store={store}>
+    <tabNavigator />
+  </Provider>
+);
 
 export default createAppContainer(tabNavigator);

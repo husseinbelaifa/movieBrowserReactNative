@@ -2,7 +2,7 @@
 import React from "react";
 
 import { FlatList, TouchableOpacity, View, StyleSheet } from "react-native";
-
+import MovieRow from "./MovieRow";
 export class MovieListView extends React.Component {
   render() {
     return (
